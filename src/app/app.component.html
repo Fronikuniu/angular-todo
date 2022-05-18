@@ -1,50 +1,46 @@
 <div class="container mt-5">
   <nav class="row">
     <div class="nav-wrapper">
-      <span class="brand-logo center">LISTA ZADAŃ</span>
+      <span class="brand-logo center">{{ title }}</span>
     </div>
   </nav>
   <div class="content">
     <div class="row">
-      <button class="btn col s2 offset-s10">Dodaj zadanie</button>
-      <button class="btn col s2 offset-s10">Zakończ</button>
+      <button class="btn col s2 offset-s10">Add task</button>
+      <button class="btn col s2 offset-s10">Complete task</button>
     </div>
 
     <div class="row">
-      <input
-        class="col s8"
-        type="text"
-        placeholder="Dodaj zadanie i datę wykonania"
-      />
+      <input class="col s8" type="text" placeholder="Add task and date" />
       <input class="col s2 disabled" type="date" />
       <button class="btn-floating">+</button>
     </div>
 
     <ul class="collection">
       <li class="collection-item row">
-        <span class="col s10"> 1. Siłownia - 02.01 czwartek </span>
+        <span class="col s10"> 1. Gym - 02.01 Thursday </span>
         <div class="col s2 right-align">
-          <button class="btn-floating btn-small red mr-5">
+          <button class="btn-floating btn-small red mr-5" title="Remove task">
             <i class="material-icons">remove</i>
           </button>
-          <button class="btn-floating btn-small green">
+          <button class="btn-floating btn-small green" title="Complete task">
             <i class="material-icons">check</i>
           </button>
         </div>
       </li>
       <li class="collection-item row">
-        <span class="col done">Sprzątanie strychu</span>
+        <span class="col done">Cleaning</span>
       </li>
     </ul>
 
-    <h1>Dzisiaj brak zadań :-)</h1>
+    <h1>No assignments today.</h1>
 
-    <button class="btn red">Wyczyść</button>
+    <button class="btn red">Clear</button>
   </div>
 
   <footer class="page-footer mt-5">
     <div class="footer-copyright">
-      <div class="container">2022 © Lista zadań zbudowana w Angularze.</div>
+      <div class="container">{{ copyright }}</div>
     </div>
   </footer>
 </div>
