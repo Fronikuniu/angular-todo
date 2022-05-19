@@ -1,7 +1,7 @@
 <div class="container mt-5">
   <nav class="row">
     <div class="nav-wrapper">
-      <span class="brand-logo center">{{ title }}</span>
+      <span class="brand-logo center">{{ config?.title }}</span>
     </div>
   </nav>
   <div class="content">
@@ -10,15 +10,35 @@
       <button class="btn col s2 offset-s10">Complete task</button>
     </div>
 
-    <div class="row">
-      <input class="col s8" type="text" placeholder="Add task and date" />
-      <input class="col s2 disabled" type="date" />
-      <button class="btn-floating">+</button>
-    </div>
+    <form
+      class="row add-form"
+      (submit)="
+        $event.preventDefault();
+        addTask(taskName.value, taskDeadline.value);
+        taskName.value = '';
+        taskDeadline.value = ''
+      "
+    >
+      <input
+        class="col s8"
+        type="text"
+        placeholder="Add task and date"
+        #taskName
+      />
+      <input class="col s2 disabled" type="date" #taskDeadline />
+      <button type="submit" class="btn-floating">+</button>
+    </form>
 
     <ul class="collection">
-      <li class="collection-item row">
-        <span class="col s10"> 1. Gym - 02.01 Thursday </span>
+      <li
+        class="collection-item row"
+        *ngFor="let task of tasks"
+        [attr.data-index]="task.id"
+      >
+        <span class="col s10" [ngClass]="task.done ? 'done' : ''">
+          {{ task.id }}. {{ task.name }} -
+          {{ task.deadline | date: "dd.MM, EEEE" }}
+        </span>
         <div class="col s2 right-align">
           <button class="btn-floating btn-small red mr-5" title="Remove task">
             <i class="material-icons">remove</i>
@@ -28,19 +48,16 @@
           </button>
         </div>
       </li>
-      <li class="collection-item row">
-        <span class="col done">Cleaning</span>
-      </li>
     </ul>
 
     <h1>No assignments today.</h1>
 
-    <button class="btn red">Clear</button>
+    <button class="btn red" (click)="clearTasks()">Clear</button>
   </div>
 
   <footer class="page-footer mt-5">
     <div class="footer-copyright">
-      <div class="container">{{ copyright }}</div>
+      <div class="container">{{ config?.copyright }}</div>
     </div>
   </footer>
 </div>

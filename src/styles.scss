@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+.content {
+  height: unset !important;
+  max-height: unset !important;
+}
+.col {
+  &.s8,
+  &.s2 {
+    margin-left: unset !important;
+  }
+}
+.add-form {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
