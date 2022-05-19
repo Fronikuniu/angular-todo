@@ -1,63 +1,110 @@
-<div class="container mt-5">
-  <nav class="row">
-    <div class="nav-wrapper">
-      <span class="brand-logo center">{{ config?.title }}</span>
+<nav class="nav">
+  <div class="nav-text">
+    <p class="nav-date">{{ today | date: "EEEE, dd MMMM " }}</p>
+
+    <div class="nav-title-container">
+      <p class="nav-title">{{ config?.title }}</p>
+      <div class="nav-buttons">
+        <button class="btn nav-button">a</button>
+        <button class="btn nav-button">a</button>
+      </div>
     </div>
-  </nav>
-  <div class="content">
-    <div class="row">
-      <button class="btn col s2 offset-s10">Add task</button>
-      <button class="btn col s2 offset-s10">Complete task</button>
+  </div>
+</nav>
+
+<div class="todo-content">
+  <div class="container content-container">
+    <div class="progress">
+      <div class="progress-info">
+        <span class="material-icons progress-icon">content_copy</span>
+        <p class="progress-tasks">
+          <span class="progress-number">{{ tasks.length }}</span
+          >{{ pluralOrNot() }}
+        </p>
+      </div>
+      <circle-progress
+        [percent]="percentOfDoneTasks()"
+        [radius]="100"
+        [outerStrokeWidth]="16"
+        [innerStrokeWidth]="8"
+        [animation]="true"
+        [animationDuration]="300"
+        [showBackground]="false"
+        [showUnits]="false"
+        [showSubtitle]="false"
+        [showTitle]="false"
+        [startFromZero]="false"
+        [space]="8"
+      ></circle-progress>
     </div>
 
-    <form
-      class="row add-form"
-      (submit)="
-        $event.preventDefault();
-        addTask(taskName.value, taskDeadline.value);
-        taskName.value = '';
-        taskDeadline.value = ''
-      "
-    >
+    <div class="todo-table">
+      <div class="col">
+        <div class="col-header">
+          <span class="material-icons"> task </span> Open
+        </div>
+        <ul class="rows">
+          <li
+            class="row"
+            *ngFor="let task of openTasks()"
+            [attr.data-index]="task.id"
+          >
+            {{ task.id }}. {{ task.name }} -
+            {{ task.deadline | date: "dd.MM, EEEE" }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <div class="col-header">
+          <span class="material-icons"> rotate_left </span> In progress..
+        </div>
+        <ul class="rows">
+          <li
+            class="row"
+            *ngFor="let task of inProgressTasks()"
+            [attr.data-index]="task.id"
+          >
+            {{ task.id }}. {{ task.name }} -
+            {{ task.deadline | date: "dd.MM, EEEE" }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <div class="col-header">
+          <span class="material-icons"> done </span> Closed.
+        </div>
+        <ul class="rows">
+          <li
+            class="row"
+            *ngFor="let task of doneTasks()"
+            [attr.data-index]="task.id"
+          >
+            {{ task.id }}. {{ task.name }} -
+            {{ task.deadline | date: "dd.MM, EEEE" }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <form (submit)="$event.preventDefault(); addTask()">
       <input
-        class="col s8"
         type="text"
         placeholder="Add task and date"
-        #taskName
+        name="taskDesc"
+        [(ngModel)]="taskName"
       />
-      <input class="col s2 disabled" type="date" #taskDeadline />
-      <button type="submit" class="btn-floating">+</button>
+      <input type="date" name="taskDeadline" [(ngModel)]="taskDeadline" />
+      <button type="submit" [disabled]="!taskName || !taskDeadline">+</button>
     </form>
 
-    <ul class="collection">
-      <li
-        class="collection-item row"
-        *ngFor="let task of tasks"
-        [attr.data-index]="task.id"
-      >
-        <span class="col s10" [ngClass]="task.done ? 'done' : ''">
-          {{ task.id }}. {{ task.name }} -
-          {{ task.deadline | date: "dd.MM, EEEE" }}
-        </span>
-        <div class="col s2 right-align">
-          <button class="btn-floating btn-small red mr-5" title="Remove task">
-            <i class="material-icons">remove</i>
-          </button>
-          <button class="btn-floating btn-small green" title="Complete task">
-            <i class="material-icons">check</i>
-          </button>
-        </div>
-      </li>
-    </ul>
-
-    <h1>No assignments today.</h1>
-
-    <button class="btn red" (click)="clearTasks()">Clear</button>
+    <button (click)="clearTasks()" [disabled]="!tasks.length">Clear</button>
   </div>
-
-  <footer class="page-footer mt-5">
-    <div class="footer-copyright">
-      <div class="container">{{ config?.copyright }}</div>
-    </div>
-  </footer>
 </div>
+
+<footer>
+  <div>
+    <div>{{ config?.copyright }}</div>
+  </div>
+</footer>
