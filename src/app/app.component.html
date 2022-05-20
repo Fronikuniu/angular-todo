@@ -132,6 +132,7 @@
         name="taskDeadline"
         [(ngModel)]="taskDeadline"
         class="input deadline-input"
+        [min]="today | date: 'yyyy-MM-dd'"
       />
       <div class="neumorphism">
         <button
