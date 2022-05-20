@@ -24,18 +24,84 @@ $blue-dark: #0072c5;
 $blue-medium: #0090f8;
 $blue-light: #33a9fe;
 
+$neumorphism-dark: #161417;
+$neumorphism-light: #302c35;
+
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+*::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: $violet-light;
+  border-radius: 10px;
+}
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+html,
+body {
+  height: 100%;
+  width: 100vw;
   font-family: "Poppins", sans-serif;
+  background-color: $darkRadialInside;
+}
+html {
+  overflow-x: hidden;
 }
 .btn {
   background: none;
   border: none;
   color: $text-color;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  font-weight: 600;
+  &:hover {
+    color: $violet-light;
+  }
+  &.neumorphic {
+    color: $text-gray;
+    padding: 10px 15px;
+    border-radius: 10px;
+    transition: color 0.3s ease;
+    &:hover {
+      box-shadow: inset 2px 2px 10px $neumorphism-dark,
+        inset -4px -4px 10px $neumorphism-light;
+    }
+  }
+}
+.input {
+  height: 50px;
+  border: none;
+  background: none;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px $neumorphism-dark, -3px -4px 10px $neumorphism-light;
+  padding: 0 15px;
+  color: $text-color;
+  font-size: 1.1em;
+  font-weight: 600;
+  &[type="text"] {
+    font-size: 0.9em;
+  }
+  &::placeholder {
+    color: $text-gray;
+    font-size: 1.1em;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: inset 2px 2px 10px $neumorphism-dark,
+      inset -4px -4px 10px $neumorphism-light;
+  }
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
 }
 .container {
   max-width: 1200px;
@@ -59,6 +125,7 @@ $blue-light: #33a9fe;
     flex-direction: column;
     gap: 5px;
     margin-top: 40px;
+    padding: 0 10px;
   }
   &-date {
     color: $text-gray;
@@ -78,110 +145,25 @@ $blue-light: #33a9fe;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 15px;
+    gap: 8px;
   }
   &-button {
     width: 35px;
     height: 35px;
     border-radius: 50%;
+    span {
+      font-size: 2.3em;
+    }
   }
 }
-.progress {
-  position: absolute;
-  width: max-content;
-  background-color: $light-dark;
-  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
-  padding: 25px;
-  top: 12%;
-  left: 50%;
-  transform: translate(-50%);
-  &-info {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  &-icon {
-    font-size: 2em;
-  }
-  &-tasks {
-    font-size: 1.2em;
-  }
-  &-number {
-    font-size: 1.5em;
-    font-weight: 600;
-  }
-}
-.todo-content {
-  background: $dark;
-  background: linear-gradient(0deg, $dark 0%, $light-dark 100%);
-  color: $text-color;
-  border-top-left-radius: 2rem;
-  border-top-right-radius: 2rem;
-  margin-top: -30px;
-}
-.content-container {
-  padding: 220px 0 100px;
-}
-.todo-table {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-}
-.col {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 
-  &:nth-of-type(1) {
-    .col-header {
-      box-shadow: 0 9px 4px -8px $blue-light;
-    }
-  }
-  &:nth-of-type(2) {
-    .col-header {
-      box-shadow: 0 9px 4px -8px $yellow-light;
-    }
-  }
-  &:nth-of-type(3) {
-    .col-header {
-      box-shadow: 0 9px 4px -8px $green-light;
-    }
-  }
-}
-.col-header {
-  height: 40px;
+.footer {
+  background-color: $dark;
+  height: 150px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 5px;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 10px 10px 5px 5px;
-}
-.rows {
-  background: rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 10px;
-  list-style: none;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  border-radius: 5px 5px 10px 10px;
-}
-.row {
-  color: $light-gray;
-  background: rgba(0, 0, 0, 0.02);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 10px;
-  border-radius: 8px;
+  justify-content: flex-start;
+  color: $text-color;
+  font-size: 1.5em;
+  font-weight: 600;
 }

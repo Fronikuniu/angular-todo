@@ -1,3 +1,4 @@
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { Task } from 'src/types';
 
@@ -56,23 +57,33 @@ export class AppComponent {
   taskDeadline: string = '';
   manageTask: boolean = false;
   today: Date = new Date();
+  openTasks: Task[] = [];
+  inProgressTasks: Task[] = [];
+  doneTasks: Task[] = [];
 
   constructor() {
     this.config = {
       title: 'Task details',
       copyright: `${this.today.getFullYear()} © TODO List build with Angular.`,
     };
+    this.updateTasks();
   }
 
-  openTasks(): Task[] {
+  private updateTasks(): void {
+    this.openTasks = this.getOpenTasks();
+    this.inProgressTasks = this.getInProgressTasks();
+    this.doneTasks = this.getDoneTasks();
+  }
+
+  private getOpenTasks(): Task[] {
     return this.tasks.filter((task) => !task.done && !task.inProgress);
   }
 
-  inProgressTasks(): Task[] {
+  private getInProgressTasks(): Task[] {
     return this.tasks.filter((task) => task.inProgress);
   }
 
-  doneTasks(): Task[] {
+  private getDoneTasks(): Task[] {
     return this.tasks.filter((task) => task.done);
   }
 
@@ -90,45 +101,85 @@ export class AppComponent {
       this.taskName = '';
       this.taskDeadline = '';
     }
+    this.updateTasks();
   }
 
   removeTask(id: number) {
     this.tasks = this.tasks.filter((task) => task.id !== id);
-  }
-
-  doneTask(id: number) {
-    this.tasks.filter((task) => task.id === id && (task.done = true));
+    this.updateTasks();
   }
 
   clearTasks(): void {
     this.tasks = [];
+    this.updateTasks();
   }
 
-  todaysTasks(): Task[] {
-    const year = this.today.getFullYear();
-    const month = this.today.getMonth() + 1;
-    const day = this.today.getDate();
+  // todaysTasks(): Task[] {
+  //   const year = this.today.getFullYear();
+  //   const month = this.today.getMonth() + 1;
+  //   const day = this.today.getDate();
 
-    const prepareMonth = month <= 9 ? `0${month}` : month;
-    const prepareDay = day <= 9 ? `0${day}` : day;
+  //   const prepareMonth = month <= 9 ? `0${month}` : month;
+  //   const prepareDay = day <= 9 ? `0${day}` : day;
 
-    return this.tasks.filter(
-      (task) =>
-        task.deadline === `${year}-${prepareMonth}-${prepareDay}` && !task.done
-    );
-  }
-
-  switchManageTask(): void {
-    this.manageTask = !this.manageTask;
-  }
+  //   return this.tasks.filter(
+  //     (task) =>
+  //       task.deadline === `${year}-${prepareMonth}-${prepareDay}` && !task.done
+  //   );
+  // }
 
   pluralOrNot(): string {
     return this.tasks.length === 1 ? 'Task' : 'Tasks';
   }
 
   percentOfDoneTasks(): number {
-    const doneTasks = this.doneTasks().length;
+    const doneTasks = this.doneTasks.length;
     const allTasks = this.tasks.length;
     return (doneTasks / allTasks) * 100;
+  }
+
+  private transferData(event: CdkDragDrop<Task[]>): void {
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+  }
+
+  private updateTasksData(): void {
+    this.tasks = [
+      ...this.openTasks,
+      ...this.inProgressTasks,
+      ...this.doneTasks,
+    ];
+  }
+
+  droppedToOpen(event: CdkDragDrop<Task[]>): void {
+    this.transferData(event);
+    this.openTasks = this.openTasks.map((task) => {
+      return { ...task, inProgress: false, done: false };
+    });
+    this.updateTasksData();
+  }
+
+  droppedToInProgress(event: CdkDragDrop<Task[]>): void {
+    this.transferData(event);
+    this.inProgressTasks = this.inProgressTasks.map((task) => ({
+      ...task,
+      inProgress: true,
+      done: false,
+    }));
+    this.updateTasksData();
+  }
+
+  droppedToClosed(event: CdkDragDrop<Task[]>): void {
+    this.transferData(event);
+    this.doneTasks = this.doneTasks.map((task) => ({
+      ...task,
+      inProgress: false,
+      done: true,
+    }));
+    this.updateTasksData();
   }
 }
