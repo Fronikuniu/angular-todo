@@ -114,20 +114,6 @@ export class AppComponent {
     this.updateTasks();
   }
 
-  // todaysTasks(): Task[] {
-  //   const year = this.today.getFullYear();
-  //   const month = this.today.getMonth() + 1;
-  //   const day = this.today.getDate();
-
-  //   const prepareMonth = month <= 9 ? `0${month}` : month;
-  //   const prepareDay = day <= 9 ? `0${day}` : day;
-
-  //   return this.tasks.filter(
-  //     (task) =>
-  //       task.deadline === `${year}-${prepareMonth}-${prepareDay}` && !task.done
-  //   );
-  // }
-
   pluralOrNot(): string {
     return this.tasks.length === 1 ? 'Task' : 'Tasks';
   }
@@ -157,9 +143,11 @@ export class AppComponent {
 
   droppedToOpen(event: CdkDragDrop<Task[]>): void {
     this.transferData(event);
-    this.openTasks = this.openTasks.map((task) => {
-      return { ...task, inProgress: false, done: false };
-    });
+    this.openTasks = this.openTasks.map((task) => ({
+      ...task,
+      inProgress: false,
+      done: false,
+    }));
     this.updateTasksData();
   }
 
